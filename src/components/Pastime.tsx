@@ -35,6 +35,20 @@ const MarkdownContainer = styled.div`
     }
   }
 
+  img {
+    border: 2px solid #ccc;
+    border-radius: 4px;
+  }
+
+  li {
+    width: 50%;
+    margin: 0 auto;
+  }
+
+  ul {
+    width: 100%;
+  }
+
   /* レスポンシブ対応 */
   @media screen and (max-width: 768px) {
     p {
@@ -60,6 +74,11 @@ const MarkdownContainer = styled.div`
         border-left: 2px solid #90b4ce;
         position: relative;
       }
+    }
+
+    li {
+      width: 100%;
+      margin: auto;
     }
   }
 `;

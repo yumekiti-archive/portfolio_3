@@ -2,6 +2,7 @@ import React from 'react';
 import useSWR from 'swr';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 
 import Profile from './components/Profile.tsx';
 import About from './components/About.tsx';
@@ -12,6 +13,18 @@ import Pastime from './components/Pastime.tsx';
 import Products from './components/Products.tsx';
 import Works from './components/Works.tsx';
 import Links from './components/Links.tsx';
+
+const sections = [
+  { key: 'Profile', component: Profile, id: 'home' },
+  { key: 'About', component: About, id: 'about' },
+  { key: 'Timeline', component: Timeline, id: 'timeline' },
+  { key: 'Jobs', component: Jobs, id: 'jobs' },
+  { key: 'Skills', component: Skills, id: 'skills' },
+  { key: 'Pastime', component: Pastime, id: 'pastime' },
+  { key: 'Products', component: Products, id: 'products' },
+  { key: 'Works', component: Works, id: 'works' },
+  { key: 'Links', component: Links, id: 'links' },
+];
 
 function App() {
   const { data, error, isLoading } = useSWR(import.meta.env.VITE_API_URL);
@@ -31,116 +44,48 @@ function App() {
           </h1>
           <div className="flex justify-center sm:py-0">
             <nav className="overflow-x-auto space-x-4 sm:space-x-8">
-              <a href="#home" className="text-SubHeadline">
-                Home
-              </a>
-              <a href="#about" className="text-SubHeadline">
-                About
-              </a>
-              <a href="#timeline" className="text-SubHeadline">
-                Timeline
-              </a>
-              <a href="#jobs" className="text-SubHeadline">
-                Jobs
-              </a>
-              <a href="#skills" className="text-SubHeadline">
-                Skills
-              </a>
-              <a href="#pastime" className="text-SubHeadline">
-                Pastime
-              </a>
-              <a href="#products" className="text-SubHeadline">
-                Products
-              </a>
-              <a href="#works" className="text-SubHeadline">
-                Works
-              </a>
-              <a href="#links" className="text-SubHeadline">
-                Links
-              </a>
+              {sections.map((section, index) => (
+                <a
+                  key={index}
+                  href={`#${section.id}`}
+                  className="text-SubHeadline"
+                >
+                  {section.key}
+                </a>
+              ))}
             </nav>
           </div>
         </div>
       </header>
       <main className="pt-14">
-        {sharpSplit.map(
-          (value: string, index: number) =>
-            index !== 0 && (
-              <div
+        {sharpSplit.map((value: string, index: number) => {
+          if (index === 0) return;
+
+          const even = index % 2 === 0;
+          const section = sections.find(section => value.includes(section.key));
+          const Component = section?.component || React.Fragment;
+
+          if (section) {
+            return (
+              <section
                 key={index}
-                className={`markdown ${
-                  index % 2 === 0 ? 'bg-Background' : 'bg-Main'
-                }`}
+                className={`markdown ${even ? 'bg-Background' : 'bg-Main'}`}
               >
-                {value.includes('Profile') && (
-                  <Profile id="home">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {value}
-                    </ReactMarkdown>
-                  </Profile>
-                )}
-                {value.includes('About') && (
-                  <About id="about">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {value}
-                    </ReactMarkdown>
-                  </About>
-                )}
-                {value.includes('Timeline') && (
-                  <Timeline id="timeline">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {value}
-                    </ReactMarkdown>
-                  </Timeline>
-                )}
-                {value.includes('Jobs') && (
-                  <Jobs id="jobs">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {value}
-                    </ReactMarkdown>
-                  </Jobs>
-                )}
-                {value.includes('Skills') && (
-                  <Skills id="skills">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {value}
-                    </ReactMarkdown>
-                  </Skills>
-                )}
-                {value.includes('Pastime') && (
-                  <Pastime id="pastime">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {value}
-                    </ReactMarkdown>
-                  </Pastime>
-                )}
-                {value.includes('Products') && (
-                  <Products id="products">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {value}
-                    </ReactMarkdown>
-                  </Products>
-                )}
-                {value.includes('Works') && (
-                  <Works id="works">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {value}
-                    </ReactMarkdown>
-                  </Works>
-                )}
-                {value.includes('Links') && (
-                  <Links id="links">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {value}
-                    </ReactMarkdown>
-                  </Links>
-                )}
-              </div>
-            )
-        )}
+                <Component id={section.id}>
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    rehypePlugins={[rehypeRaw]}
+                  >
+                    {value}
+                  </ReactMarkdown>
+                </Component>
+              </section>
+            );
+          }
+        })}
       </main>
-      <footer className="bg-Main text-center">
-        <p>&copy; 2020</p>
+      <footer className="bg-Background text-center">
+        <p>&copy; 2023 - Copyright Yumekiti.</p>
       </footer>
     </div>
   );
