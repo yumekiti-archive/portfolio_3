@@ -16,6 +16,15 @@ const MarkdownContainer = styled.div`
     margin: 2rem 0;
   }
 
+  p + ul {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1rem;
+    width: 60%;
+
+    justify-items: center;
+  }
+
   p + ul li {
     font-size: 1.4rem;
     color: #094067;
@@ -41,6 +50,12 @@ const MarkdownContainer = styled.div`
       font-size: 2.6rem;
       font-weight: bold;
       color: #094067;
+    }
+
+    p + ul {
+      width: 100%;
+
+      justify-items: center;
     }
 
     p + ul li {

@@ -50,6 +50,12 @@ const MarkdownContainer = styled.div`
     }
   }
 
+  a {
+    color: #3da9fc;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
   /* レスポンシブ対応 */
   @media screen and (max-width: 768px) {
     p {
